@@ -1,0 +1,32 @@
+  {
+                    "type": "extensions",
+                    "apiVersion": "2019-03-01",
+                    "name": "CreateADForest",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[parameters('vm-name')]"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.Powershell",
+                        "type": "DSC",
+                        "typeHandlerVersion": "2.19",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "ModulesUrl": "[uri(parameters('_artifactsLocation'), concat('DSC/ADS.zip', parameters('_artifactsLocationSasToken')))]",
+                            "ConfigurationFunction": "ADS.ps1\\ADS",
+                            "Properties": {
+                                "DomainName": "[parameters('domain-name')]",
+                                "SqlEndPoint": "10.0.2.4",
+                                "AdminCreds": {
+                                    "UserName": "[parameters('vm-login')]",
+                                    "Password": "PrivateSettingsRef:AdminPassword"
+                                }
+                            }
+                        },
+                        "protectedSettings": {
+                            "Items": {
+                                "AdminPassword": "[parameters('vm-login-password')]"
+                            }
+                        }
+                    }
+                }

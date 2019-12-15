@@ -27,8 +27,8 @@
         }
     },
     "variables": {
-        "osdiskname": "[concat(parameters('virtual-machine-name'), '-osdisk')]",
-        "vmSubnetRef": "[concat(variables('vnetId'), '/subnets/virtual-machines')]"
+        "osdiskname": "[concat(parameters('virtual-machine-name'), '-osdisk')]"
+       
     },
     "resources": [
         {
