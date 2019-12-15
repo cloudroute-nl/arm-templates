@@ -8,7 +8,7 @@
         "virtual-machine-size": {
             "type": "string"
         },
-        "virtual-machine-nic-name" {
+        "virtual-machine-nic-name" : {
             "type": "string"
         },
         "virtual-machine-username": {
