@@ -34,7 +34,7 @@
         }
     },
     "variables": {
-        "pip-id": {
+        "pip-id-json": {
             "id": "[parameters('nic-public-ip-id')]"
         }
     },
@@ -54,7 +54,7 @@
                             },
                             "privateIPAllocationMethod": "[parameters('nic-allocation-method')]",
                             "privateIPAddress": "[if(and(not(empty(parameters('nic-private-ip'))), not(equals(toLower(parameters('nic-allocation-method')),'dynamic')) ), parameters('nic-private-ip'), json('null'))]",
-                            "publicIpAddress": "[if(not(empty(parameters('nic-public-ip-id'))), variables('nic-public-ip-id'), json('null'))]"
+                            "publicIpAddress": "[if(not(empty(parameters('nic-public-ip-id'))), variables('pip-id-json'), json('null'))]"
                         }
                     }
                 ]
