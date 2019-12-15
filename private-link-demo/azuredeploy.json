@@ -17,7 +17,6 @@
         "vm-login-password": {
             "type": "securestring"
         },
-       
         "vnet-name": {
             "type": "string"
         },
@@ -30,7 +29,7 @@
         "domain-name": {
             "type": "string"
         },
-        "location":{
+        "location": {
             "type": "string",
             "defaultValue": "[resourceGroup().location]"
         },
@@ -69,9 +68,7 @@
                 }
             ]
         },
-        
         "pip-name": "[concat(parameters('vm-name'), '-pip')]",
-        
         "vmnicname": "[concat(parameters('vm-name'), '-nic')]",
         "osdiskname": "[concat(parameters('vm-name'), '-osdisk')]",
         "vnetId": "[resourceid(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('vnet-name'))]",
@@ -79,9 +76,7 @@
         "sqlSubnetRef": "[concat(variables('vnetId'), '/subnets/private-links')]",
         "privateLinkServiceId": "[resourceId(resourceGroup().name, 'Microsoft.Sql/servers', parameters('sql-server-name'))]",
         "privateLinkName": "[concat(parameters('sql-server-name'), '-private-link')]",
-
-        "microsoft-resources-deployments-api-version" : "2018-01-01",
-            
+        "microsoft-resources-deployments-api-version": "2018-01-01"
     },
     "resources": [
         {
@@ -104,7 +99,6 @@
                     "sql-login-password": {
                         "value": "[parameters('sql-login-password')]"
                     }
-                    
                 }
             }
         },
@@ -132,7 +126,9 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('microsoft-resources-deployments-api-version')]",
             "name": "virtual-network-initial",
-            "dependsOn": ["network-security-group"],
+            "dependsOn": [
+                "network-security-group"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -144,10 +140,12 @@
                         "value": "[parameters('vnet-name')]"
                     },
                     "vnet-address-prefixes": {
-                        "value": ["10.0.0.0/16"]
+                        "value": [
+                            "10.0.0.0/16"
+                        ]
                     },
-                    "vnet-subnets" : {
-                        "value" : [
+                    "vnet-subnets": {
+                        "value": [
                             {
                                 "name": "virtual-machines",
                                 "properties": {
@@ -190,7 +188,10 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('microsoft-resources-deployments-api-version')]",
             "name": "vm-nic",
-            "dependsOn": ["vm-public-ip", "virtual-network-initial"],
+            "dependsOn": [
+                "vm-public-ip",
+                "virtual-network-initial"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -201,17 +202,17 @@
                     "nic-name": {
                         "value": "[variables('vmnicname')]"
                     },
-                    "nic-subnet-id" : {
-                        "value" : "[variables('vmsubnetRef')]"
+                    "nic-subnet-id": {
+                        "value": "[variables('vmsubnetRef')]"
                     },
-                    "nic-private-ip" : {
-                        "value" : "10.0.1.4"
+                    "nic-private-ip": {
+                        "value": "10.0.1.4"
                     },
-                    "nic-allocation-method" :{
+                    "nic-allocation-method": {
                         "value": "Static"
                     },
-                    "nic-public-ip-id" : {
-                        "value" : "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', variables('pip-name'))]"
+                    "nic-public-ip-id": {
+                        "value": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', variables('pip-name'))]"
                     }
                 }
             }
@@ -220,7 +221,9 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('microsoft-resources-deployments-api-version')]",
             "name": "private-endpoint",
-            "dependsOn": ["virtual-network-initial"],
+            "dependsOn": [
+                "virtual-network-initial"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -231,11 +234,11 @@
                     "private-endpoint-name": {
                         "value": "[variables('privateLinkName')]"
                     },
-                    "sql-server-name" : {
-                        "value" : "[parameters('sql-server-name')]"
+                    "sql-server-name": {
+                        "value": "[parameters('sql-server-name')]"
                     },
-                    "private-endpoint-subnet-id" : {
-                        "value" : "[variables('sqlSubnetRef')]"
+                    "private-endpoint-subnet-id": {
+                        "value": "[variables('sqlSubnetRef')]"
                     }
                 }
             }
@@ -244,13 +247,15 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('microsoft-resources-deployments-api-version')]",
             "name": "virtual-machine",
-            "dependsOn": ["vm-nic"],
+            "dependsOn": [
+                "vm-nic"
+            ],
             "properties": {
                 "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/virtual-machine.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
+              "templateLink": {
+                "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/virtual-machine.json', parameters('_artifactsLocationSasToken')))]",
+                "contentVersion": "1.0.0.0"
+              },
                 "parameters": {
                     "virtual-machine-name": {
                         "value": "[parameters('vm-name')]"
@@ -258,7 +263,7 @@
                     "virtual-machine-size": {
                         "value": "[parameters('vm-size')]"
                     },
-                    "virtual-machine-nic-name" {
+                    "virtual-machine-nic-name" : {
                         "value": "[variables('vmnicname')]"
                     },
                     "virtual-machine-username": {
@@ -267,10 +272,8 @@
                     "virtual-machine-password": {
                         "value": "[parameters('vm-login-password')]"
                     }
-                  
                 }
             }
         }
-       
     ]
 }
