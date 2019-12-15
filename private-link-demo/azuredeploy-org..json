@@ -95,7 +95,7 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "sql-server-name": {
+                    "nsg-name": {
                         "value": "[parameters('sql-server-name')]"
                     },
                     "sql-login": {
@@ -107,7 +107,7 @@
                     
                 }
             }
-        }/*,
+        },
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('microsoft-resources-deployments-api-version')]",
@@ -215,9 +215,9 @@
                     }
                 }
             }
-        },
+        }
 
-       
+       /*
         {
             "type": "Microsoft.Network/privateEndpoints",
             "apiVersion": "2019-09-01",

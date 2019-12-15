@@ -24,7 +24,7 @@
     "resources": [
         {
             "type": "Microsoft.Sql/servers",
-            "apiVersion": "[paramameters('sql-server-api-version')]",
+            "apiVersion": "[parameters('sql-server-api-version')]",
             "name": "[parameters('sql-server-name')]",
             "location": "[parameters('location')]",
             "properties": {
