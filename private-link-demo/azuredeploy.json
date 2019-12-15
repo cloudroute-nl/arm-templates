@@ -75,7 +75,7 @@
         "vmnicname": "[concat(parameters('vm-name'), '-nic')]",
         "osdiskname": "[concat(parameters('vm-name'), '-osdisk')]",
         "vnetId": "[resourceid(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('vnet-name'))]",
-        "vmSubnetRef": "[concat(variables('vnetId'), '/subnets/vms')]",
+        "vmSubnetRef": "[concat(variables('vnetId'), '/subnets/virtual-machines')]",
         "sqlSubnetRef": "[concat(variables('vnetId'), '/subnets/private-links')]",
         "privateLinkServiceId": "[resourceId(resourceGroup().name, 'Microsoft.Sql/servers', parameters('sql-server-name'))]",
         "privateLinkName": "[concat(parameters('sql-server-name'), '-private-link')]",
@@ -215,7 +215,31 @@
                     }
                 }
             }
-        }/*,
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('microsoft-resources-deployments-api-version')]",
+            "name": "private-endpoint",
+            "dependsOn": ["virtual-network-initial"],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/private-sql-endpoint.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "private-endpoint-name": {
+                        "value": "[variables('privateLinkName')]"
+                    },
+                    "sql-server-name" : {
+                        "value" : "[parameters('sql-server-name')]"
+                    },
+                    "private-endpoint-subnet-id" : {
+                        "value" : "[variables('sqlSubnetRef')]"
+                    }
+                }
+            }
+        }/*
 
        
         {

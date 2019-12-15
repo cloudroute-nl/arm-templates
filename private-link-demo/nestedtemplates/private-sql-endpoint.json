@@ -1,0 +1,59 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "pip-name": {
+            "type": "string"
+        },
+        "pip-sku" : {
+            "type" : "string",
+            "defaultValue": "Basic"
+        },
+        "pip-allocation-method" : {
+            "type": "string",
+            "defaultValue": "Dynamic",
+            "allowedValues": ["Dynamic", "Static"]
+        },
+        "public-ip-api-version" : {
+            "type": "string",
+            "defaultValue": "2019-02-01"
+        },
+        "location" : {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/privateEndpoints",
+            "apiVersion": "2019-09-01",
+            "name": "[variables('privateLinkName')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', parameters('vnet-name'))]",
+                "[concat('Microsoft.Sql/servers/', parameters('sql-server-name'))]",
+            ],
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "privateLinkServiceConnections": [
+                    {
+                        "name": "[variables('privateLinkName')]",
+                        "properties": {
+                            "privateLinkServiceId": "[variables('privateLinkServiceId')]",
+                            "groupIds": [
+                                "sqlServer"
+                            ],
+                            "privateLinkServiceConnectionState": {
+                                "status": "Approved",
+                                "description": "Approved by provisiong template"
+                            }
+                        }
+                    }
+                ],
+                "manualPrivateLinkServiceConnections": [],
+                "subnet": {
+                    "id": "[variables('sqlSubnetRef')]"
+                }
+            }
+        },
+    ]
+}
