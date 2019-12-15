@@ -23,12 +23,12 @@
     "resources": [
         {
             "type": "Microsoft.Network/networkSecurityGroups",
-            "apiVersion": "2019-02-01",
-            "name": "[paramters('nsg-name')]",
+            "apiVersion": "[parameters('network-security-groups-api-version')]",
+            "name": "[parameters('nsg-name')]",
             "location": "[parameters('location')]",
             "properties": {
                 "securityRules": "[parameters('nsg-rules')]"
             }
-        },
+        }
     ]
 }
