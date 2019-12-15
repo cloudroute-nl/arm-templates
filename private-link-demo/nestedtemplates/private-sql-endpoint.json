@@ -2,41 +2,39 @@
     "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "pip-name": {
+        "private-endpoint-name": {
             "type": "string"
         },
-        "pip-sku" : {
-            "type" : "string",
-            "defaultValue": "Basic"
+        "sql-server-name" : {
+            "type" :"string" 
         },
-        "pip-allocation-method" : {
-            "type": "string",
-            "defaultValue": "Dynamic",
-            "allowedValues": ["Dynamic", "Static"]
+        "private-endpoint-subnet-id" : {
+            "type": "string"
         },
-        "public-ip-api-version" : {
+        "private-endpoint-api-version" : {
             "type": "string",
-            "defaultValue": "2019-02-01"
+            "defaultValue": "2019-09-01"
         },
         "location" : {
             "type": "string",
             "defaultValue": "[resourceGroup().location]"
         }
     },
+    "variables": {
+        "privateLinkServiceId": "[resourceId(resourceGroup().name, 'Microsoft.Sql/servers', parameters('sql-server-name'))]"
+        
+
+    },
     "resources": [
         {
             "type": "Microsoft.Network/privateEndpoints",
-            "apiVersion": "2019-09-01",
-            "name": "[variables('privateLinkName')]",
-            "dependsOn": [
-                "[concat('Microsoft.Network/virtualNetworks/', parameters('vnet-name'))]",
-                "[concat('Microsoft.Sql/servers/', parameters('sql-server-name'))]",
-            ],
-            "location": "[resourceGroup().location]",
+            "apiVersion": "[parameters('private-endpoint-api-version')]",
+            "name": "[parameters('private-endpoint-name')]",
+            "location": "[parameters('location')]",
             "properties": {
                 "privateLinkServiceConnections": [
                     {
-                        "name": "[variables('privateLinkName')]",
+                        "name": "[parameters('private-endpoint-name')]",
                         "properties": {
                             "privateLinkServiceId": "[variables('privateLinkServiceId')]",
                             "groupIds": [
@@ -49,11 +47,13 @@
                         }
                     }
                 ],
-                "manualPrivateLinkServiceConnections": [],
+                
                 "subnet": {
-                    "id": "[variables('sqlSubnetRef')]"
+                    "id": "[parameters('private-endpoint-subnet-id')]"
                 }
+                
+
             }
-        },
+        }
     ]
 }
