@@ -26,7 +26,7 @@
         },
         "network-interface-api-version": {
             "type": "string",
-            "defaultValue": "2019-07-01"
+            "defaultValue": "2019-09-01"
         },
         "location": {
             "type": "string",
@@ -41,7 +41,7 @@
     "resources": [
         {
             "type": "Microsoft.Network/networkInterfaces",
-            "apiVersion": "[parameters('network-interface-api-version')",
+            "apiVersion": "[parameters('network-interface-api-version')]",
             "name": "[parameters('nic-name')]",
             "location": "[parameters('location')]",
             "properties": {
