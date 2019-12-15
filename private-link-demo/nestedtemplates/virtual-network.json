@@ -5,8 +5,8 @@
         "vnet-name": {
             "type": "string"
         },
-        "vnet-address-prefixes" :{
-            "type" :"array"
+        "vnet-address-prefixes" : {
+            "type" : "array"
         },
         "vnet-subnets" : {
             "type" :"array"
@@ -33,7 +33,6 @@
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": "[parameters('vnet-address-prefixes')]"
-                    
                 },
                 "subnets": "[parameters('vnet-subnets')]",
                 "dhcpOptions" : {
