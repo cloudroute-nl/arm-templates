@@ -40,7 +40,7 @@
                 "description": "The location of resources, such as templates and DSC modules, that the template depends on"
             },
             /*"defaultValue": "[deployment().properties.templateLink.uri]"*/
-            "defaultValue": "https://raw.githubusercontent.com/cloudroute-nl/arm-templates/master/"
+            "defaultValue": "https://raw.githubusercontent.com/cloudroute-nl/arm-templates/master/private-link-demo/"
         },
         "_artifactsLocationSasToken": {
             "type": "securestring",
@@ -216,7 +216,7 @@
                 }
             }
         }
-        
+
        /*
         {
             "type": "Microsoft.Network/privateEndpoints",
