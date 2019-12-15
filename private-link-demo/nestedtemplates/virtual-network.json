@@ -1,0 +1,46 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnet-name": {
+            "type": "string"
+        },
+        "vnet-address-prefixes" :{
+            "type" :"array"
+        },
+        "vnet-subnets" : {
+            "type" :"array"
+        },
+        "vnet-dns-servers" : {
+            "type" :"array",
+            "defaultValue": []
+        },
+        "virtual-network-api-api-version" : {
+            "type": "string",
+            "defaultValue": "2019-04-01"
+        },
+        "location" : {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "[parameters('virtual-network-api-api-version')]",
+            "name": "[parameters('vnet-name')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('vnet-address-prefixes')]"
+                    ]
+                },
+                "subnets": "[parameters('vnet-subnets')]",
+                "dhcpOptions" : {
+                    "dnsServers":"[if(not(empty(parameters('vnet-dns-servers'))), parameters('vnet-dns-servers'), json('null'))]"
+                }
+            }
+        }
+    ]
+}
