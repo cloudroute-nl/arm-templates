@@ -239,118 +239,38 @@
                     }
                 }
             }
-        }/*
-
-       
-        {
-            "type": "Microsoft.Network/privateEndpoints",
-            "apiVersion": "2019-09-01",
-            "name": "[variables('privateLinkName')]",
-            "dependsOn": [
-                "[concat('Microsoft.Network/virtualNetworks/', parameters('vnet-name'))]",
-                "[concat('Microsoft.Sql/servers/', parameters('sql-server-name'))]",
-            ],
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "privateLinkServiceConnections": [
-                    {
-                        "name": "[variables('privateLinkName')]",
-                        "properties": {
-                            "privateLinkServiceId": "[variables('privateLinkServiceId')]",
-                            "groupIds": [
-                                "sqlServer"
-                            ],
-                            "privateLinkServiceConnectionState": {
-                                "status": "Approved",
-                                "description": "Approved by provisiong template"
-                            }
-                        }
-                    }
-                ],
-                "manualPrivateLinkServiceConnections": [],
-                "subnet": {
-                    "id": "[variables('sqlSubnetRef')]"
-                }
-            }
         },
         {
-            "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "2019-07-01",
-            "name": "[parameters('vm-name')]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', variables('vmnicname'))]"
-            ],
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('microsoft-resources-deployments-api-version')]",
+            "name": "virtual-machine",
+            "dependsOn": ["vm-nic"],
             "properties": {
-                "hardwareProfile": {
-                    "vmSize": "[parameters('vm-size')]"
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/virtual-machine.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
                 },
-                "storageProfile": {
-                    "osDisk": {
-                        "createOption": "FromImage",
-                        "name": "[variables('osdiskname')]",
-                        "managedDisk": {
-                            "storageAccountType": "Premium_LRS"
-                        }
+                "parameters": {
+                    "virtual-machine-name": {
+                        "value": "[parameters('vm-name')]"
                     },
-                    "imageReference": {
-                        "publisher": "MicrosoftWindowsServer",
-                        "offer": "WindowsServer",
-                        "sku": "2019-Datacenter",
-                        "version": "latest"
+                    "virtual-machine-size": {
+                        "value": "[parameters('vm-size')]"
+                    },
+                    "virtual-machine-nic-name" {
+                        "value": "[variables('vmnicname')]"
+                    },
+                    "virtual-machine-username": {
+                        "value": "[parameters('vm-login')]"
+                    },
+                    "virtual-machine-password": {
+                        "value": "[parameters('vm-login-password')]"
                     }
-                },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('vmnicname'))]"
-                        }
-                    ]
-                },
-                "osProfile": {
-                    "computerName": "[parameters('vm-name')]",
-                    "adminUsername": "[parameters('vm-login')]",
-                    "adminPassword": "[parameters('vm-login-password')]",
-                    "windowsConfiguration": {
-                        "provisionVmAgent": true
-                    }
+                  
                 }
-            },
-            "resources": [
-                {
-                    "type": "extensions",
-                    "apiVersion": "2019-03-01",
-                    "name": "CreateADForest",
-                    "location": "[resourceGroup().location]",
-                    "dependsOn": [
-                        "[parameters('vm-name')]"
-                    ],
-                    "properties": {
-                        "publisher": "Microsoft.Powershell",
-                        "type": "DSC",
-                        "typeHandlerVersion": "2.19",
-                        "autoUpgradeMinorVersion": true,
-                        "settings": {
-                            "ModulesUrl": "[uri(parameters('_artifactsLocation'), concat('DSC/ADS.zip', parameters('_artifactsLocationSasToken')))]",
-                            "ConfigurationFunction": "ADS.ps1\\ADS",
-                            "Properties": {
-                                "DomainName": "[parameters('domain-name')]",
-                                "SqlEndPoint": "10.0.2.4",
-                                "AdminCreds": {
-                                    "UserName": "[parameters('vm-login')]",
-                                    "Password": "PrivateSettingsRef:AdminPassword"
-                                }
-                            }
-                        },
-                        "protectedSettings": {
-                            "Items": {
-                                "AdminPassword": "[parameters('vm-login-password')]"
-                            }
-                        }
-                    }
-                }
-            ]
+            }
         }
-        */
+       
     ]
 }
