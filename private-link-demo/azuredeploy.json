@@ -168,7 +168,7 @@
                     }
                 }
             }
-        }/*,
+        },
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('microsoft-resources-deployments-api-version')]",
@@ -211,11 +211,11 @@
                         "value": "Static"
                     },
                     "nic-public-ip-id" : {
-                        "value" : "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', variables('pipname'))]"
+                        "value" : "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', variables('pip-name'))]"
                     }
                 }
             }
-        },
+        }/*,
 
        
         {
