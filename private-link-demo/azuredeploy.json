@@ -107,7 +107,7 @@
                     
                 }
             }
-        }/*,
+        },
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('microsoft-resources-deployments-api-version')]",
@@ -123,7 +123,7 @@
                         "value": "[variables('nsg-name')]"
                     },
                     "nsg-rules": {
-                        "value": "[variables('nsg-rules')]"
+                        "value": "[variables('nsg-rules').value]"
                     }
                 }
             }
@@ -141,7 +141,7 @@
                 },
                 "parameters": {
                     "vnet-name": {
-                        "value": "[variables('vnet-name')]"
+                        "value": "[parameters('vnet-name')]"
                     },
                     "vnet-address-prefixes": {
                         "value": ["10.0.0.0/16"]
@@ -168,7 +168,7 @@
                     }
                 }
             }
-        },
+        }/*,
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('microsoft-resources-deployments-api-version')]",

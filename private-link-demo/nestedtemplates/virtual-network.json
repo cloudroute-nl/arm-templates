@@ -32,9 +32,8 @@
             "location": "[parameters('location')]",
             "properties": {
                 "addressSpace": {
-                    "addressPrefixes": [
-                        "[parameters('vnet-address-prefixes')]"
-                    ]
+                    "addressPrefixes": "[parameters('vnet-address-prefixes')]"
+                    
                 },
                 "subnets": "[parameters('vnet-subnets')]",
                 "dhcpOptions" : {
