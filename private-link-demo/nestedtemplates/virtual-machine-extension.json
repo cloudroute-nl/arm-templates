@@ -1,0 +1,30 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "extension-name": {
+            "type": "string"
+        },
+        "extension-properties" : {
+            "type": "object"
+        },
+        "virtual-machines-extensions-api-version" : {
+            "type": "string",
+            "defaultValue": "2019-03-01"
+        },
+        "location" : {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "[parameters('virtual-machines-extensions-api-version')]",
+            "name": "[parameters('extension-name')]",
+            "location": "[parameters('location')]",
+            "properties": "[parameters('extension-properties')]"
+        }
+    ]
+}
+
