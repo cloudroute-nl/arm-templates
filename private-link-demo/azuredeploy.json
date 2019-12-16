@@ -278,7 +278,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('microsoft-resources-deployments-api-version')]",
-            "name": "virtual-machine=extension",
+            "name": "virtual-machine-extension",
             "dependsOn": [
                 "virtual-machine"
             ],
@@ -290,7 +290,7 @@
               },
                 "parameters": {
                     "extension-name": {
-                        "value": "[concat(parameters('vm-name'), '/createforest')]"
+                        "value": "[concat(parameters('vm-name'), '/SqlDnsEntry')]"
                     },
                     "extension-properties" : {
                         "value": {
@@ -316,6 +316,57 @@
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('microsoft-resources-deployments-api-version')]",
+            "name": "virtual-network-dns",
+            "dependsOn": [
+                "virtual-machine-extension"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/virtual-network.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vnet-name": {
+                        "value": "[parameters('vnet-name')]"
+                    },
+                    "vnet-address-prefixes": {
+                        "value": [
+                            "10.0.0.0/16"
+                        ]
+                    },
+                    "vnet-dns-servers" : {
+                        "value" : ["10.0.1.4"]
+                    },
+                    "vnet-subnets": {
+                        "value": [
+                            {
+                                "name": "virtual-machines",
+                                "properties": {
+                                    "addressPrefix": "10.0.1.0/24",
+                                    "networkSecurityGroup": {
+                                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg-name'))]"
+                                    },
+                                    "privateEndpointNetworkPolicies": "Enabled",
+                                    "privateLinkServiceNetworkPolicies": "Enabled"
+                                }
+                            },
+                            {
+                                "name": "private-links",
+                                "properties": {
+                                    "addressPrefix": "10.0.2.0/24",
+                                    "privateEndpointNetworkPolicies": "Disabled",
+                                    "privateLinkServiceNetworkPolicies": "Enabled"
+                                }
+                            }
+                        ]
                     }
                 }
             }
