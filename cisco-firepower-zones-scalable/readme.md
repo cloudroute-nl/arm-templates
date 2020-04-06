@@ -5,3 +5,5 @@ https://www.cisco.com/c/en/us/td/docs/security/firepower/quick_start/azure/ftdv-
 
 The scalable design is based on this repo: 
 https://github.com/cisco-security/public-cloud/tree/master/ngfwv-in-azure
+
+The base for this ARM template is this: https://github.com/JackStromberg/Azure-CiscoNGFWv/blob/master/azuredeploy.json
